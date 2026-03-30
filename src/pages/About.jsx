@@ -86,7 +86,7 @@ export default function About() {
                 <div className="relative z-10 bg-cream p-4 shadow-2xl rotate-2 group-hover:rotate-0 transition-all duration-700">
                   <div className="aspect-[4/5] overflow-hidden">
                     <img 
-                      src="/src/assets/Img/KAV04020.webp" 
+                      src="/assets/Img/KAV04020.webp" 
                       alt="Vasudha Ravi Early Journey" 
                       className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                     />

@@ -81,9 +81,13 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] uppercase tracking-widest opacity-50">
+        <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] uppercase tracking-widest opacity-80">
           <p>© {new Date().getFullYear()} Vasudha Ravi. All rights reserved.</p>
-          <p>Handcrafted with Tradition</p>
+          <div className="flex items-center gap-2">
+            <span>Powered by</span>
+            <img src="/assets/Img/Powered_logo.png" alt="Nexto Logo" className="h-3 w-auto" />
+            <span>Nexto Digital</span>
+          </div>
         </div>
       </div>
     </footer>

@@ -22,7 +22,7 @@ export default function Concerts() {
       <PageHero 
         title="Concerts" 
         subtitle="Performances Across Generations" 
-        bgImage="/src/assets/Img/KAV03964.webp"
+        bgImage="/assets/Img/KAV03964.webp"
       />
 
       {/* Thematic Presentations */}

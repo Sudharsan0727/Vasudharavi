@@ -9,9 +9,9 @@ export default function Home() {
   const [activeDiscography, setActiveDiscography] = useState(0);
   
   const guruImages = [
-    '/src/assets/Img/KAV04045.webp',
-    '/src/assets/Img/KAV04146.webp',
-    '/src/assets/Img/KAV03964.webp'
+    '/assets/Img/KAV04045.webp',
+    '/assets/Img/KAV04146.webp',
+    '/assets/Img/KAV03964.webp'
   ];
 
   // Intersection Observer for scroll animations
@@ -47,7 +47,7 @@ export default function Home() {
       year: '2024', 
       title: 'Graceful & Melodious',
       quote: 'A voice that carries both technical finesse and heartfelt devotion, standing as an exemplar of the tradition.', 
-      image: '/src/assets/Img/KAV03931.webp',
+      image: '/assets/Img/KAV03931.webp',
       category: 'FESTIVAL REVIEW'
     },
     { 
@@ -56,7 +56,7 @@ export default function Home() {
       year: '2023', 
       title: 'MLV Bani Revived',
       quote: 'Her concert was an ode to the MLV Bani, resonating with spiritual depth and technical brilliance.', 
-      image: '/src/assets/Img/KAV03953.webp',
+      image: '/assets/Img/KAV03953.webp',
       category: 'CONCERT SERIES'
     },
     { 
@@ -65,7 +65,7 @@ export default function Home() {
       year: '2022', 
       title: 'Training & Talent',
       quote: 'A perfect mix of training and talent, her performance was a masterclass in raga alapana.', 
-      image: '/src/assets/Img/KAV03983.webp',
+      image: '/assets/Img/KAV03983.webp',
       category: 'PRESS CRITIQUE'
     },
   ];
@@ -73,13 +73,16 @@ export default function Home() {
   return (
     <div className="bg-cream animate-fade-in">
       {/* Hero Section - The Triple Segment Editorial Design (Edition 10) */}
-      <section className="relative min-h-screen flex items-stretch overflow-hidden bg-[#FAF9F6]">
+      <section className="relative min-h-screen flex items-stretch overflow-hidden bg-cream">
+        {/* Unique Texture Overlay */}
+        <div className="absolute inset-0 bg-noise opacity-[0.4] pointer-events-none mix-blend-multiply" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(245,214,123,0.1)_0%,_rgba(0,0,0,0)_70%)] pointer-events-none" />
         
         {/* Triple Segment Organization */}
         <div className="flex flex-col lg:flex-row w-full h-full">
            
            {/* Segment 1: The Brand Anchor (Left 20%) */}
-           <div className="hidden lg:flex lg:w-[15%] border-r border-gold/10 flex-col items-center justify-center p-12 bg-white/40">
+           <div className="hidden lg:flex lg:w-[15%] border-r border-gold/10 flex-col items-center justify-center p-12 bg-cream/80 backdrop-blur-sm">
               <span className="font-body text-[8px] uppercase tracking-[1em] [writing-mode:vertical-rl] mb-20 opacity-30 font-black">VOL. 010 // ED. 2024</span>
               <h2 className="font-display text-4xl lg:text-5xl text-charcoal/20 uppercase tracking-[0.2em] [writing-mode:vertical-rl] rotate-180 font-black">VASUDHA RAVI</h2>
               <div className="mt-20 w-px h-24 bg-gold/20" />
@@ -96,9 +99,9 @@ export default function Home() {
                  {/* Double Frame Effect */}
                  <div className="absolute -inset-4 border border-gold/30 rounded-t-full translate-x-3 -translate-y-3 pointer-events-none group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-1000" />
                  
-                 <div className="relative aspect-[3/4] rounded-t-full overflow-hidden shadow-[0_50px_100px_rgba(0,0,0,0.1)] border-white border-[12px]">
+                 <div className="relative aspect-[3/4] rounded-t-full overflow-hidden shadow-[0_50px_100px_rgba(0,0,0,0.1)] border-cream border-[12px]">
                     <img 
-                      src="/src/assets/Img/KAV04223.webp" 
+                      src="/assets/Img/KAV04223.webp" 
                       alt="Vidushi Vasudha Ravi - Editorial" 
                       className="w-full h-full object-cover group-hover:scale-110 transition-all duration-[2000ms]"
                       loading="lazy"
@@ -115,11 +118,11 @@ export default function Home() {
            </div>
 
            {/* Segment 3: The Narrative (Right 30%) */}
-           <div className="w-full lg:w-[30%] flex flex-col justify-center px-10 lg:px-16 py-24 lg:py-0 order-2 lg:order-3 bg-white lg:bg-transparent animate-on-scroll">
+           <div className="w-full lg:w-[30%] flex flex-col justify-center px-10 lg:px-16 py-24 lg:py-0 order-2 lg:order-3 bg-cream lg:bg-transparent animate-on-scroll">
               <div className="mb-12">
                  <div className="inline-flex items-center gap-4 mb-10">
-                    <Music size={14} className="text-gold" />
-                    <span className="font-body text-gold uppercase tracking-[0.4em] text-[10px] font-black underline underline-offset-8">VOICE · SCHOLAR · GURU</span>
+                    <Music size={14} className="text-burgundy" />
+                    <span className="font-body text-burgundy uppercase tracking-[0.4em] text-[10px] font-black underline underline-offset-8">VOICE · SCHOLAR · GURU</span>
                  </div>
 
                  <h1 className="font-display text-6xl md:text-7xl lg:text-8xl text-charcoal leading-[0.85] tracking-tighter mb-8">
@@ -205,7 +208,7 @@ export default function Home() {
                 {/* Main Image Container */}
                 <div className="relative z-10 aspect-[4/5] overflow-hidden shadow-2xl bg-parchment">
                   <img
-                    src="/src/assets/Img/KAV04223.webp"
+                    src="/assets/Img/KAV04223.webp"
                     alt="Vidushi Vasudha Ravi"
                     loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 will-change-transform"
@@ -228,8 +231,8 @@ export default function Home() {
             {/* Right: Content Section */}
             <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left animate-on-scroll">
               <div className="mb-6 flex items-center gap-3" style={{ transitionDelay: '200ms' }}>
-                <div className="w-8 h-[1px] bg-gold" />
-                <span className="font-body text-gold uppercase tracking-[0.25em] text-xs font-semibold">The Artist</span>
+                <div className="w-8 h-[1px] bg-burgundy" />
+                <span className="font-body text-burgundy uppercase tracking-[0.25em] text-xs font-semibold">The Artist</span>
               </div>
               
               <h2 className="font-display text-5xl lg:text-6xl text-charcoal mb-8 leading-[1.1]" style={{ transitionDelay: '400ms' }}>
@@ -295,9 +298,9 @@ export default function Home() {
         <div className="container mx-auto px-6 lg:px-12 relative z-10">
           <div className="text-center mb-12 animate-on-scroll">
             <div className="inline-flex items-center gap-2 mb-4">
-              <span className="w-12 h-[1px] bg-gold/50" />
-              <span className="font-body text-gold uppercase tracking-[0.3em] text-xs font-bold">Milestones</span>
-              <span className="w-12 h-[1px] bg-gold/50" />
+              <span className="w-12 h-[1px] bg-burgundy/30" />
+              <span className="font-body text-burgundy uppercase tracking-[0.3em] text-xs font-bold">Milestones</span>
+              <span className="w-12 h-[1px] bg-burgundy/30" />
             </div>
             <h2 className="font-display text-5xl md:text-6xl text-charcoal">Musical Milestones</h2>
           </div>
@@ -363,22 +366,28 @@ export default function Home() {
       </section>
 
       {/* Musical Discography - Classic Heritage Showcase */}
-      <section id="music" className="py-5 bg-cream overflow-hidden border-y border-gold/10 relative min-h-[750px] flex flex-col justify-center">
+      <section id="music" className="py-24 bg-cream overflow-hidden border-y border-gold/10 relative min-h-[750px] flex flex-col justify-center">
         {/* Subtle Background Elements */}
         <div className="absolute inset-0 bg-noise opacity-30 pointer-events-none mix-blend-overlay" />
         
         <div className="container mx-auto px-6 lg:px-12 relative z-10">
           {/* Centered Header using Website standard components */}
-          <div className="text-center mb-12 animate-on-scroll">
-            <GoldDivider />
+          <div className="text-center mb-20 animate-on-scroll">
             
-            <div className="flex flex-col items-center mt-[-3rem]">
-               <span className="font-body text-gold uppercase tracking-[0.5em] text-[10px] font-black mb-4">Official Retrospective</span>
-               <h2 className="font-display text-5xl md:text-6xl lg:text-7xl text-charcoal leading-none mb-6 uppercase tracking-widest">
-                  RECORDED <span className="italic text-burgundy font-light lowercase">WORKS</span>
+            <div className="flex flex-col items-center">
+               <div className="flex items-center gap-3 mb-6">
+                 <div className="w-8 h-[1px] bg-burgundy" />
+                 <span className="font-body text-burgundy uppercase tracking-[0.25em] text-xs font-semibold">Official Retrospective</span>
+                 <div className="w-8 h-[1px] bg-burgundy" />
+               </div>
+               
+               <h2 className="font-display text-5xl lg:text-6xl text-charcoal mb-6 leading-tight">
+                 A Monumental Legacy of <br />
+                 <span className="italic text-burgundy">Recorded Works</span>
                </h2>
-               <p className="font-body text-charcoal/40 text-[10px] uppercase tracking-[0.4em] font-black italic max-w-xl text-center leading-relaxed">
-                  A monumental retrospective of thematic performance
+               
+               <p className="font-body text-charcoal/60 text-lg italic max-w-xl text-center leading-relaxed">
+                  A retrospective of thematic performances across three decades.
                </p>
             </div>
           </div>
@@ -386,10 +395,10 @@ export default function Home() {
           <div className="relative h-[550px] w-full flex items-center justify-center">
              <div className="relative w-full h-full overflow-hidden bg-parchment shadow-[0_30px_80px_rgba(0,0,0,0.1)] border border-gold/10">
                 {[
-                  { title: 'Ramana Heritage', cat: 'SACRED CLASSICS', year: '2023', image: '/src/assets/Img/KAV04114.webp' },
-                  { title: 'Cinematic Voice', cat: 'FILM & CROSSOVER', year: '2022', image: '/src/assets/Img/KAV04165.webp' },
-                  { title: 'MLV Heritage', cat: 'BANI LEGACY', year: '2024', image: '/src/assets/Img/KAV03964.webp' },
-                  { title: 'Global Fusion', cat: 'WORLD STAGE', year: '2021', image: '/src/assets/Img/KAV04151.webp' },
+                  { title: 'Ramana Heritage', cat: 'SACRED CLASSICS', year: '2023', image: '/assets/Img/KAV04114.webp' },
+                  { title: 'Cinematic Voice', cat: 'FILM & CROSSOVER', year: '2022', image: '/assets/Img/KAV04165.webp' },
+                  { title: 'MLV Heritage', cat: 'BANI LEGACY', year: '2024', image: '/assets/Img/KAV03964.webp' },
+                  { title: 'Global Fusion', cat: 'WORLD STAGE', year: '2021', image: '/assets/Img/KAV04151.webp' },
                 ].map((album, idx) => {
                   const isActive = idx === activeDiscography;
                   
@@ -415,7 +424,7 @@ export default function Home() {
                           <div className="w-full lg:w-[40%] bg-white lg:bg-transparent h-full flex flex-col justify-center p-12 lg:p-20 relative z-30">
                              <div className="border-l-2 border-gold/30 pl-8">
                                 <span className="font-body text-gold uppercase tracking-[0.6em] text-[10px] mb-6 block font-black opacity-80">{album.cat} · {album.year} EDITION</span>
-                                <h3 className="font-display text-4xl lg:text-7xl text-charcoal mb-10 leading-tight italic font-light">{album.title}</h3>
+                                <h3 className="font-display text-4xl lg:text-6xl text-charcoal mb-8 leading-tight tracking-tight">{album.title}</h3>
                                 <div className="h-px w-24 bg-gold/50 mb-10" />
                                 <p className="font-body text-charcoal/60 text-lg lg:text-xl italic leading-relaxed max-w-sm">
                                    "A monumental preservation of lineage and innovation reassembled for the global listener."
@@ -513,7 +522,7 @@ export default function Home() {
               {/* Card 1: Cinema Highlight (Color) */}
               <div className="relative group overflow-hidden bg-black/20 aspect-[4/5] md:translate-y-20 transition-all duration-700 hover:shadow-2xl hover:shadow-gold/10 transform-gpu">
                 <img 
-                  src="/src/assets/Img/KAV04165.webp" 
+                  src="/assets/Img/KAV04165.webp" 
                   alt="Ponniyin Selvan Collaboration" 
                   loading="lazy"
                   className="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000 will-change-transform transform-gpu"
@@ -530,7 +539,7 @@ export default function Home() {
               {/* Card 2: International Highlight (Black & White) */}
               <div className="relative group overflow-hidden bg-black/20 aspect-[4/5] transition-all duration-700 hover:shadow-2xl hover:shadow-gold/10 transform-gpu">
                 <img 
-                  src="/src/assets/Img/KAV04181.webp" 
+                  src="/assets/Img/KAV04181.webp" 
                   alt="International Jazz Collaboration" 
                   loading="lazy"
                   className="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000 will-change-transform transform-gpu"
@@ -659,31 +668,31 @@ export default function Home() {
 
             {/* The Script (Content) */}
             <div className="w-full lg:w-1/3 animate-on-scroll" style={{ transitionDelay: '300ms' }}>
-              <div className="border-l-2 border-gold pl-6 lg:pl-8 py-2">
-                <span className="font-body text-gold uppercase tracking-[0.3em] text-[10px] font-black mb-3 block">From the Artist's Stage</span>
+              <div className="border-l-2 border-burgundy pl-6 lg:pl-8 py-2">
+                <span className="font-body text-burgundy uppercase tracking-[0.3em] text-[10px] font-black mb-3 block">From the Artist's Stage</span>
                 <h2 className="font-display text-3xl md:text-5xl text-charcoal mb-2 font-black tracking-tighter">
                   RAMA NIDU PAADA
                 </h2>
-                <span className="inline-block px-3 py-1 bg-gold/10 text-gold text-[10px] font-body uppercase mb-6 border border-gold/20">
+                <span className="inline-block px-3 py-1 bg-burgundy/10 text-burgundy text-[10px] font-body uppercase mb-6 border border-burgundy/20">
                   Ragam • Shanmukhapriya
                 </span>
 
-                <p className="text-charcoal/50 text-sm leading-relaxed mb-8 font-body italic">
+                <p className="text-charcoal/80 text-lg leading-relaxed mb-10 font-body italic">
                   "Between devotion and mastery, a voice finds its truth." <br /><br />
                   A soulful kriti of Thyagaraja rendered with the full weight of Shanmukhapriya raga — captured live at a signature Carnatic concert.
                 </p>
 
                 <div className="space-y-4 font-body text-xs">
                   <div className="flex justify-between border-b border-gold/10 pb-2">
-                    <span className="text-charcoal/40 uppercase tracking-widest">VOCALIST</span>
+                    <span className="text-charcoal/80 uppercase tracking-widest">VOCALIST</span>
                     <span className="text-charcoal font-black">Vidushi Vasudha Ravi</span>
                   </div>
                   <div className="flex justify-between border-b border-gold/10 pb-2">
-                    <span className="text-charcoal/40 uppercase tracking-widest">COMPOSER</span>
+                    <span className="text-charcoal/80 uppercase tracking-widest">COMPOSER</span>
                     <span className="text-charcoal font-black">Saint Thyagaraja</span>
                   </div>
                   <div className="flex justify-between border-b border-gold/10 pb-2">
-                    <span className="text-charcoal/40 uppercase tracking-widest">STATUS</span>
+                    <span className="text-charcoal/80 uppercase tracking-widest">STATUS</span>
                     <span className="text-gold font-black">Live Performance</span>
                   </div>
                 </div>
@@ -711,9 +720,9 @@ export default function Home() {
         
         <div className="container mx-auto px-6 relative z-10">
           <div className="inline-flex items-center gap-3 mb-6">
-            <div className="w-12 h-px bg-gold/50" />
-            <span className="font-body text-gold uppercase tracking-[0.5em] text-xs font-black">In The Media</span>
-            <div className="w-12 h-px bg-gold/50" />
+            <div className="w-12 h-px bg-burgundy/30" />
+            <span className="font-body text-burgundy uppercase tracking-[0.5em] text-xs font-black">In The Media</span>
+            <div className="w-12 h-px bg-burgundy/30" />
           </div>
           <h2 className="font-display text-5xl md:text-7xl text-charcoal leading-tight">
             Critical <span className="italic text-burgundy font-light">Appreciation</span>
@@ -805,14 +814,14 @@ export default function Home() {
           <div className="relative flex flex-col lg:flex-row items-stretch min-h-[650px]">
             
             {/* Left: Overlapping White Card */}
-            <div className="w-full lg:w-[50%] bg-white p-10 lg:p-12 shadow-[0_15px_50px_rgba(0,0,0,0.1)] relative z-20 self-center border-l-[4px] border-gold animate-on-scroll">
-              <div className="inline-block bg-gold text-white px-3 py-1 text-[10px] font-black uppercase tracking-widest mb-10">
+            <div className="w-full lg:w-[50%] bg-white p-10 lg:p-12 shadow-[0_15px_50px_rgba(0,0,0,0.1)] relative z-20 self-center border-l-[4px] border-burgundy animate-on-scroll">
+              <div className="inline-block bg-burgundy text-white px-3 py-1 text-[10px] font-black uppercase tracking-widest mb-10">
                 The Guru
               </div>
               
               <h2 className="font-display text-3xl md:text-4xl lg:text-5xl text-charcoal leading-tight mb-12">
                 Passing the Torch, <br />
-                <span className="text-gold">Nurturing the Future.</span>
+                <span className="text-burgundy">Nurturing the Future.</span>
               </h2>
               
               <div className="space-y-6 mb-12">

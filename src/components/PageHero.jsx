@@ -1,4 +1,4 @@
-export default function PageHero({ title, subtitle, bgImage = '/src/assets/Img/KAV03953.webp' }) {
+export default function PageHero({ title, subtitle, bgImage = '/assets/Img/KAV03953.webp' }) {
   return (
     <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
       {/* Background Image / Pattern Placeholder */}

@@ -56,7 +56,7 @@ export default function Navbar() {
             <span className="font-display italic text-2xl lg:text-3xl text-charcoal tracking-tight leading-none mb-1">
               Vasudha Ravi
             </span>
-            <span className="text-[8px] font-body text-gold uppercase tracking-[0.4em] font-black opacity-60">Classical Vocalist</span>
+            <span className="text-[8px] font-body text-burgundy uppercase tracking-[0.4em] font-black">Classical Vocalist</span>
           </div>
         </Link>
 
