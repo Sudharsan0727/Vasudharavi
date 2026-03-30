@@ -41,7 +41,7 @@ export default function About() {
         {/* Large Musical Icon Overlay (Watermark) */}
         <div className="absolute top-10 right-[-100px] md:right-[-50px] opacity-[0.05] pointer-events-none select-none">
           <svg width="600" height="800" viewBox="0 0 200 300" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-gold">
-            <path d="M100 250C120 250 140 230 140 200C140 160 100 140 80 120C60 100 50 80 50 60C50 30 70 10 100 10C130 10 150 30 150 60C150 70 145 80 140 85L140 250C140 270 120 290 100 290C80 290 60 270 60 240C60 210 80 190 100 190" stroke="currentColor" stroke-width="2" />
+            <path d="M100 250C120 250 140 230 140 200C140 160 100 140 80 120C60 100 50 80 50 60C50 30 70 10 100 10C130 10 150 30 150 60C150 70 145 80 140 85L140 250C140 270 120 290 100 290C80 290 60 270 60 240C60 210 80 190 100 190" stroke="currentColor" strokeWidth="2" />
           </svg>
         </div>
         

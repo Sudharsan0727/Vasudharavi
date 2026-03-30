@@ -4,7 +4,7 @@ export default function PageHero({ title, subtitle, bgImage = '/src/assets/Img/K
       {/* Background Image / Pattern Placeholder */}
       <div className="absolute inset-0 bg-charcoal" />
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-40 mix-blend-overlay"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60 mix-blend-overlay"
         style={{ backgroundImage: `url(${bgImage})` }}
       />
       

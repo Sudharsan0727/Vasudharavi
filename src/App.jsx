@@ -17,12 +17,8 @@ export default function App() {
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/concerts" element={<Concerts />} />
-            <Route path="/music" element={<Music />} />
-            <Route path="/teaching" element={<Teaching />} />
-            <Route path="/media" element={<Media />} />
-            <Route path="/contact" element={<Contact />} />
+            {/* All other paths redirect back to Home as this is now a one-page site */}
+            <Route path="*" element={<Home />} />
           </Routes>
         </main>
         <Footer />
