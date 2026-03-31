@@ -31,15 +31,15 @@ export default function Navbar() {
   }, [location.pathname]);
 
   return (
-    <header className={`fixed w-full top-0 left-0 z-[100] transition-all duration-700 pointer-events-none px-6 lg:px-12 ${isScrolled ? 'pt-4' : 'pt-8'}`}>
+    <header className={`sticky top-0 w-full z-[100] transition-all duration-300 px-4 lg:px-12 ${isScrolled ? 'py-1.5 lg:py-2' : 'py-2 lg:py-4'} bg-white/80 backdrop-blur-md border-b border-gold/5`}>
       
       <div className={`
-        mx-auto max-w-7xl h-20 lg:h-24 pointer-events-auto
-        flex items-center justify-between px-8 lg:px-16
+        mx-auto max-w-7xl h-12 lg:h-16
+        flex items-center justify-between px-4 lg:px-16
         transition-all duration-500 relative
         ${isScrolled 
-          ? 'bg-white/90 backdrop-blur-xl border border-gold/10 shadow-[0_20px_40px_rgba(0,0,0,0.05)] rounded-full h-16 lg:h-20 max-w-6xl' 
-          : 'bg-transparent border-b border-gold/10 rounded-0'
+          ? 'bg-white/95 backdrop-blur-xl border border-gold/10 rounded-full h-10 lg:h-12 max-w-5xl' 
+          : 'bg-transparent border-none'
         }
       `}>
         
@@ -101,10 +101,19 @@ export default function Navbar() {
 
         {/* Mobile Menu Overlay */}
         <div className={`
-          md:hidden fixed inset-0 top-0 left-0 w-full h-screen bg-white z-[90] flex flex-col items-center justify-center px-12 gap-12
+          md:hidden fixed inset-0 top-0 left-0 w-full h-screen bg-white z-[150] flex flex-col items-center justify-center px-12 gap-12
           transition-all duration-700 ease-in-out
           ${mobileMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-[-100%] opacity-0 pointer-events-none'}
         `}>
+           {/* Close Button Inside Menu */}
+           <button 
+             onClick={() => setMobileMenuOpen(false)}
+             className="absolute top-8 right-8 flex items-center gap-3 text-charcoal"
+           >
+              <span className="font-body text-[10px] uppercase tracking-[0.4em] font-black">CLOSE</span>
+              <X size={24} />
+           </button>
+
            {/* Background Large Vasudha Watermark */}
            <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
               <span className="font-display text-[20vw] font-black italic">Vasudha</span>
@@ -115,6 +124,7 @@ export default function Navbar() {
                 <NavLink 
                   key={link.path} 
                   to={link.path}
+                  onClick={() => setMobileMenuOpen(false)}
                   className={({ isActive }) => `
                     font-display text-4xl italic transition-all duration-500
                     ${isActive ? 'text-burgundy' : 'text-charcoal/40 hover:text-charcoal'}

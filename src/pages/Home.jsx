@@ -1,12 +1,71 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown, Music, Music2, Music3, Music4, Globe2, Mic2, Plus, Play, Award } from 'lucide-react';
 import GoldDivider from '../components/GoldDivider';
+
+// Moving StatCounter outside to prevent re-creation and infinite loops
+const StatCounter = ({ end, duration = 2000, suffix = "" }) => {
+  const [count, setCount] = useState(0);
+  const [hasStarted, setHasStarted] = useState(false);
+  const counterRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !hasStarted) {
+          setHasStarted(true);
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    if (counterRef.current) {
+      observer.observe(counterRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [hasStarted]);
+
+  useEffect(() => {
+    if (!hasStarted) return;
+
+    const endVal = parseInt(end);
+    if (isNaN(endVal)) return;
+
+    let startTime = null;
+
+    const step = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const progress = timestamp - startTime;
+      const currentCount = Math.min(Math.floor((progress / duration) * endVal), endVal);
+
+      setCount(currentCount);
+
+      if (currentCount < endVal) {
+        requestAnimationFrame(step);
+      }
+    };
+
+    requestAnimationFrame(step);
+  }, [hasStarted, end, duration]);
+
+  return <span ref={counterRef}>{count}{suffix}</span>;
+};
 
 export default function Home() {
   const [activeReview, setActiveReview] = useState(1);
   const [activeGuruImage, setActiveGuruImage] = useState(0);
   const [activeDiscography, setActiveDiscography] = useState(0);
+  const [activeVideoId, setActiveVideoId] = useState(null);
+
+  // Auto-slide effect for Discography (Paused if video is open)
+  useEffect(() => {
+    if (activeVideoId) return;
+    const timer = setInterval(() => {
+      setActiveDiscography((prev) => (prev + 1) % 4);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [activeVideoId]);
   
   const guruImages = [
     '/assets/Img/KAV04045.webp',
@@ -73,23 +132,22 @@ export default function Home() {
   return (
     <div className="bg-cream animate-fade-in">
       {/* Hero Section - The Triple Segment Editorial Design (Edition 10) */}
-      <section className="relative min-h-screen flex items-stretch overflow-hidden bg-cream">
+      <section className="relative lg:h-[750px] min-h-screen flex items-stretch overflow-hidden bg-cream">
         {/* Unique Texture Overlay */}
         <div className="absolute inset-0 bg-noise opacity-[0.4] pointer-events-none mix-blend-multiply" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(245,214,123,0.1)_0%,_rgba(0,0,0,0)_70%)] pointer-events-none" />
         
         {/* Triple Segment Organization */}
-        <div className="flex flex-col lg:flex-row w-full h-full">
+        <div className="flex flex-col lg:flex-row w-full h-full lg:pt-0">
            
            {/* Segment 1: The Brand Anchor (Left 20%) */}
            <div className="hidden lg:flex lg:w-[15%] border-r border-gold/10 flex-col items-center justify-center p-12 bg-cream/80 backdrop-blur-sm">
-              <span className="font-body text-[8px] uppercase tracking-[1em] [writing-mode:vertical-rl] mb-20 opacity-30 font-black">VOL. 010 // ED. 2024</span>
               <h2 className="font-display text-4xl lg:text-5xl text-charcoal/20 uppercase tracking-[0.2em] [writing-mode:vertical-rl] rotate-180 font-black">VASUDHA RAVI</h2>
               <div className="mt-20 w-px h-24 bg-gold/20" />
            </div>
 
            {/* Segment 2: The Focal Arch (Center 55%) */}
-           <div className="w-full lg:w-[55%] relative flex items-center justify-center bg-parchment/30 overflow-hidden px-8 lg:px-0 order-1 lg:order-2 border-r border-gold/10">
+           <div className="w-full lg:w-[55%] relative flex items-center justify-center bg-parchment/30 py-12 lg:py-0 px-8 lg:px-0 order-1 lg:order-2 border-r border-gold/10">
               {/* Giant Watermark Background */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.05] z-0">
                  <span className="font-display text-[60vh] font-black text-gold">RAVI</span>
@@ -97,7 +155,7 @@ export default function Home() {
 
               <div className="relative z-10 w-full max-w-[500px] group">
                  {/* Double Frame Effect */}
-                 <div className="absolute -inset-4 border border-gold/30 rounded-t-full translate-x-3 -translate-y-3 pointer-events-none group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-1000" />
+                 <div className="absolute -inset-4 border border-gold/30 rounded-t-full translate-x-2 -translate-y-2 lg:translate-x-3 lg:-translate-y-3 pointer-events-none group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-1000" />
                  
                  <div className="relative aspect-[3/4] rounded-t-full overflow-hidden shadow-[0_50px_100px_rgba(0,0,0,0.1)] border-cream border-[12px]">
                     <img 
@@ -118,29 +176,27 @@ export default function Home() {
            </div>
 
            {/* Segment 3: The Narrative (Right 30%) */}
-           <div className="w-full lg:w-[30%] flex flex-col justify-center px-10 lg:px-16 py-24 lg:py-0 order-2 lg:order-3 bg-cream lg:bg-transparent animate-on-scroll">
-              <div className="mb-12">
-                 <div className="inline-flex items-center gap-4 mb-10">
+            <div className="w-full lg:w-[30%] flex flex-col justify-center items-start text-left px-6 lg:px-16 py-24 lg:py-0 order-2 lg:order-3 bg-cream lg:bg-transparent animate-on-scroll">
+               <div className="mb-8 flex flex-col items-start w-full">
+                 <div className="inline-flex items-center gap-4 mb-4">
                     <Music size={14} className="text-burgundy" />
                     <span className="font-body text-burgundy uppercase tracking-[0.4em] text-[10px] font-black underline underline-offset-8">VOICE · SCHOLAR · GURU</span>
                  </div>
 
-                 <h1 className="font-display text-6xl md:text-7xl lg:text-8xl text-charcoal leading-[0.85] tracking-tighter mb-8">
-                    Vasudha <br />
-                    <span className="italic text-burgundy font-light ml-12">Ravi</span>
-                 </h1>
-                 
-                 <div className="h-px w-20 bg-gold/30 mb-8" />
+                  <h1 className="font-display text-[2.5rem] sm:text-6xl md:text-7xl lg:text-8xl text-charcoal leading-tight tracking-tighter mb-4">
+                     Vasudha <span className="italic text-burgundy font-light ml-4 lg:ml-12">Ravi</span>
+                  </h1>
+                                  <div className="h-px w-20 bg-gold/30 mb-4 lg:mx-0" />
 
-                 <p className="font-body text-charcoal/50 text-base leading-relaxed italic border-l-4 border-gold/20 pl-8 mb-12">
-                   "Three decades of artistic devotion, preserving the sacred architecture of Carnatic song for the global stage."
-                 </p>
+                  <p className="font-body text-charcoal/90 text-lg sm:text-xl leading-relaxed italic border-l-4 border-gold/40 pl-8 mb-8 w-full transition-colors duration-500 hover:text-charcoal">
+                    "Three decades of artistic devotion, preserving the sacred architecture of Carnatic song for the global stage."
+                  </p>
               </div>
 
-              <div className="flex flex-col gap-10 items-start ml-4">
+               <div className="flex flex-row items-center flex-wrap gap-6 lg:gap-10 lg:items-start lg:ml-4">
                  <Link 
                    to="/concerts" 
-                   className="group relative px-12 py-5 bg-charcoal text-cream overflow-hidden transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)]"
+                   className="group relative px-8 py-3 lg:px-12 lg:py-5 bg-charcoal text-cream overflow-hidden transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)]"
                  >
                     <div className="absolute inset-0 bg-gold translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
                     <span className="relative z-10 font-body uppercase tracking-[0.2em] text-[10px] font-black group-hover:text-charcoal transition-colors focus:outline-none">Listen & Explore</span>
@@ -166,19 +222,23 @@ export default function Home() {
       </section>
 
       {/* Intro Strip */}
-      <section className="bg-parchment py-12 border-y border-gold/20">
-        <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left divide-y md:divide-y-0 md:divide-x divide-gold/10">
-          <div className="pb-4 md:pb-0 flex flex-col justify-center">
-            <h3 className="font-display text-3xl text-burgundy mb-2">25+ Years</h3>
-            <p className="font-body text-charcoal/80 uppercase tracking-widest text-xs">of Performance</p>
+      <section className="bg-parchment py-10 border-y border-gold/20">
+        <div className="container mx-auto px-4 grid grid-cols-3 gap-2 md:gap-8 text-center divide-x divide-gold/15">
+          <div className="py-2 md:py-0 md:px-4 flex flex-col justify-center items-center">
+            <h3 className="font-display text-xl md:text-4xl text-burgundy mb-1">
+              <StatCounter end="25" suffix="+" /> Years
+            </h3>
+            <p className="font-body text-charcoal/80 uppercase tracking-[0.2em] md:tracking-widest text-[8px] md:text-[10px] font-black">of Performance</p>
           </div>
-          <div className="py-4 md:py-0 flex flex-col justify-center">
-            <h3 className="font-display text-3xl text-burgundy mb-2">A-Grade Artist</h3>
-            <p className="font-body text-charcoal/80 uppercase tracking-widest text-xs">All India Radio, Chennai</p>
+          <div className="py-2 md:py-0 md:px-4 flex flex-col justify-center items-center">
+            <h3 className="font-display text-xl md:text-4xl text-burgundy mb-1">A-Grade</h3>
+            <p className="font-body text-charcoal/80 uppercase tracking-[0.2em] md:tracking-widest text-[8px] md:text-[10px] font-black">All India Radio</p>
           </div>
-          <div className="py-4 md:md:py-0 flex flex-col justify-center">
-            <h3 className="font-display text-3xl text-burgundy mb-2">6 Countries</h3>
-            <p className="font-body text-charcoal/80 uppercase tracking-widest text-xs">International Concerts</p>
+          <div className="py-2 md:py-0 md:px-4 flex flex-col justify-center items-center">
+            <h3 className="font-display text-xl md:text-4xl text-burgundy mb-1">
+              <StatCounter end="6" /> Countries
+            </h3>
+            <p className="font-body text-charcoal/80 uppercase tracking-[0.2em] md:tracking-widest text-[8px] md:text-[10px] font-black">International</p>
           </div>
         </div>
       </section>
@@ -365,114 +425,97 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Musical Discography - Classic Heritage Showcase */}
-      <section id="music" className="py-24 bg-cream overflow-hidden border-y border-gold/10 relative min-h-[750px] flex flex-col justify-center">
-        {/* Subtle Background Elements */}
-        <div className="absolute inset-0 bg-noise opacity-30 pointer-events-none mix-blend-overlay" />
-        
+      {/* Musical Discography - Minimalist Split-Canvas Showcase */}
+      <section id="music" className="py-24 bg-cream relative overflow-hidden border-y border-gold/10 min-h-[700px] flex items-center">
         <div className="container mx-auto px-6 lg:px-12 relative z-10">
-          {/* Centered Header using Website standard components */}
-          <div className="text-center mb-20 animate-on-scroll">
+          
+          <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
             
-            <div className="flex flex-col items-center">
-               <div className="flex items-center gap-3 mb-6">
-                 <div className="w-8 h-[1px] bg-burgundy" />
-                 <span className="font-body text-burgundy uppercase tracking-[0.25em] text-xs font-semibold">Official Retrospective</span>
-                 <div className="w-8 h-[1px] bg-burgundy" />
-               </div>
-               
-               <h2 className="font-display text-5xl lg:text-6xl text-charcoal mb-6 leading-tight">
-                 A Monumental Legacy of <br />
-                 <span className="italic text-burgundy">Recorded Works</span>
-               </h2>
-               
-               <p className="font-body text-charcoal/60 text-lg italic max-w-xl text-center leading-relaxed">
-                  A retrospective of thematic performances across three decades.
-               </p>
-            </div>
-          </div>
-
-          <div className="relative h-[550px] w-full flex items-center justify-center">
-             <div className="relative w-full h-full overflow-hidden bg-parchment shadow-[0_30px_80px_rgba(0,0,0,0.1)] border border-gold/10">
+            {/* Visual Canvas (Left) */}
+            <div className="w-full lg:w-[50%] animate-on-scroll">
+              <div className="relative aspect-[4/5] max-w-[500px] mx-auto lg:ml-0 overflow-hidden shadow-[0_40px_100px_rgba(0,0,0,0.15)] bg-parchment">
                 {[
-                  { title: 'Ramana Heritage', cat: 'SACRED CLASSICS', year: '2023', image: '/assets/Img/KAV04114.webp' },
-                  { title: 'Cinematic Voice', cat: 'FILM & CROSSOVER', year: '2022', image: '/assets/Img/KAV04165.webp' },
-                  { title: 'MLV Heritage', cat: 'BANI LEGACY', year: '2024', image: '/assets/Img/KAV03964.webp' },
-                  { title: 'Global Fusion', cat: 'WORLD STAGE', year: '2021', image: '/assets/Img/KAV04151.webp' },
-                ].map((album, idx) => {
-                  const isActive = idx === activeDiscography;
-                  
-                  return (
-                    <div 
-                      key={idx}
-                      className={`absolute inset-0 transition-all duration-[1200ms] ease-in-out
-                        ${isActive ? 'opacity-100 z-20 translate-x-0' : 'opacity-0 z-10 translate-x-12 pointer-events-none'}
+                  { image: '/assets/Img/KAV03998.webp', videoId: 'fms-uNfI3Z8' },
+                  { image: '/assets/Img/KAV04127.webp', videoId: 'dQw4w9WgXcQ' },
+                  { image: '/assets/Img/KAV03953.webp', videoId: 'X7-vV96L_X4' },
+                  { image: '/assets/Img/KAV04156.webp', videoId: 'h7P9_W7W8-k' },
+                ].map((item, idx) => (
+                  <div 
+                    key={idx}
+                    onClick={() => setActiveVideoId(item.videoId)}
+                    className={`absolute inset-0 w-full h-full cursor-pointer group/vid transition-all duration-[1200ms] cubic-bezier(0.4, 0, 0.2, 1)
+                      ${idx === activeDiscography ? 'opacity-100 scale-100' : 'opacity-0 scale-110 pointer-events-none'}
+                    `}
+                  >
+                    <img 
+                      src={item.image} 
+                      alt="" 
+                      className="w-full h-full object-cover object-top"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover/vid:bg-black/20 transition-all duration-500 flex items-center justify-center">
+                       <Play size={40} className="text-white opacity-0 group-hover/vid:opacity-100 transition-all duration-500 scale-50 group-hover/vid:scale-100" fill="currentColor" />
+                    </div>
+                  </div>
+                ))}
+                
+                {/* Gold Arch Overlay (Decorative) */}
+                <div className="absolute inset-4 border border-gold/20 pointer-events-none" />
+                <div className="absolute top-0 right-0 p-8">
+                  <span className="font-display italic text-6xl text-white/40 select-none">0{activeDiscography + 1}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Narrative Canvas (Right) */}
+            <div className="w-full lg:w-[50%] flex flex-col justify-center animate-on-scroll" style={{ transitionDelay: '300ms' }}>
+              <div className="mb-12 flex items-center gap-4">
+                <Music size={16} className="text-burgundy" />
+                <div className="h-px w-16 bg-burgundy/30" />
+                <span className="font-body text-burgundy uppercase tracking-[0.6em] text-[10px] font-black underline underline-offset-8">Official Collection</span>
+              </div>
+
+              {[
+                { title: 'Ramana Heritage', cat: 'SACRED CLASSICS', year: '2023', quote: 'A profound exploration of Ramana Maharshi\'s immortal verses through the soul of classical melody.', videoId: 'fms-uNfI3Z8' },
+                { title: 'Cinematic Voice', cat: 'FILM & CROSSOVER', year: '2022', quote: 'Bringing technical perfection and classical emotive depth to the modern big-screen canvas.', videoId: 'dQw4w9WgXcQ' },
+                { title: 'MLV Heritage', cat: 'BANI LEGACY', year: '2024', quote: 'A dedicated archival tribute to the technical rigor and spiritual purity of the Vasanthakumari lineage.', videoId: 'X7-vV96L_X4' },
+                { title: 'Global Fusion', cat: 'WORLD STAGE', year: '2021', quote: 'Where tradition finds a new language—acclaimed international collaborations across jazz and folk.', videoId: 'h7P9_W7W8-k' },
+              ].map((album, idx) => (
+                <div 
+                  key={idx}
+                  className={`transition-all duration-700 
+                    ${idx === activeDiscography ? 'opacity-100 translate-x-0' : 'fixed opacity-0 -translate-x-10 pointer-events-none'}
+                  `}
+                >
+                  <span className="font-body text-burgundy/40 text-[11px] uppercase tracking-[0.4em] mb-4 block font-black">{album.cat}</span>
+                  <h3 className="font-display text-5xl lg:text-7xl text-charcoal mb-10 leading-tight tracking-tighter">
+                    {album.title}
+                  </h3>
+                  <div className="flex gap-4 mb-12">
+                    <div className="w-12 h-[2px] bg-gold" />
+                    <p className="font-body text-charcoal/60 text-xl lg:text-2xl leading-relaxed italic max-w-lg">
+                      "{album.quote}"
+                    </p>
+                  </div>
+                </div>
+              ))}
+
+              <div className="flex flex-col sm:flex-row items-center gap-10 mt-6">
+                <div className="flex gap-4">
+                   {[0, 1, 2, 3].map((num) => (
+                    <button 
+                      key={num}
+                      onClick={() => setActiveDiscography(num)}
+                      className={`relative overflow-hidden group w-14 h-2 bg-charcoal/5 transition-all duration-500
+                        ${activeDiscography === num ? 'bg-burgundy w-20' : 'hover:bg-gold/20'}
                       `}
                     >
-                       <div className="flex flex-col lg:flex-row h-full">
-                          {/* Image Column */}
-                          <div className="w-full lg:w-[60%] h-full relative overflow-hidden">
-                             <img 
-                                src={album.image} 
-                                alt="" 
-                                className={`w-full h-full object-cover transition-transform duration-[3000ms] ${isActive ? 'scale-100' : 'scale-110'}`} 
-                             />
-                             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-parchment lg:to-transparent" />
-                          </div>
-                          
-                          {/* Details Column */}
-                          <div className="w-full lg:w-[40%] bg-white lg:bg-transparent h-full flex flex-col justify-center p-12 lg:p-20 relative z-30">
-                             <div className="border-l-2 border-gold/30 pl-8">
-                                <span className="font-body text-gold uppercase tracking-[0.6em] text-[10px] mb-6 block font-black opacity-80">{album.cat} · {album.year} EDITION</span>
-                                <h3 className="font-display text-4xl lg:text-6xl text-charcoal mb-8 leading-tight tracking-tight">{album.title}</h3>
-                                <div className="h-px w-24 bg-gold/50 mb-10" />
-                                <p className="font-body text-charcoal/60 text-lg lg:text-xl italic leading-relaxed max-w-sm">
-                                   "A monumental preservation of lineage and innovation reassembled for the global listener."
-                                </p>
-                                
-                                <div className="mt-12 group/btn inline-flex items-center gap-4 cursor-pointer">
-                                   <span className="font-body text-[10px] text-charcoal uppercase tracking-[0.4em] font-black border-b border-gold group-hover/btn:border-charcoal transition-all">Listen Sample</span>
-                                   <div className="w-8 h-8 rounded-full border border-gold/20 flex items-center justify-center text-gold group-hover/btn:bg-gold group-hover/btn:text-white transition-all transform group-hover/btn:translate-x-2">
-                                      <Play size={12} fill="currentColor" />
-                                   </div>
-                                </div>
-                             </div>
-                          </div>
-                       </div>
-                    </div>
-                  );
-                })}
-
-                {/* Vertical Sidebar Indicators - precise minimalism */}
-                <div className="absolute right-10 top-1/2 -translate-y-1/2 flex flex-col gap-6 z-40 hidden lg:flex">
-                   {[0, 1, 2, 3].map((num) => (
-                      <button 
-                         key={num}
-                         onClick={() => setActiveDiscography(num)}
-                         className="group flex items-center gap-4"
-                      >
-                         <span className={`font-display italic text-lg transition-all duration-500 
-                            ${activeDiscography === num ? 'text-burgundy opacity-100' : 'text-charcoal/20 opacity-50 group-hover:opacity-80'}
-                         `}>
-                            0{num + 1}
-                         </span>
-                         <div className={`h-[1px] bg-gold transition-all duration-1000 
-                            ${activeDiscography === num ? 'w-12' : 'w-0 group-hover:w-4'}
-                         `} />
-                      </button>
+                      <div className={`absolute inset-0 bg-gold origin-left transition-transform duration-1000 ${activeDiscography === num ? 'scale-x-100' : 'scale-x-0'}`} />
+                    </button>
                    ))}
                 </div>
+              </div>
+            </div>
 
-                {/* Progress Indicators (Mobile) */}
-                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-4 lg:hidden z-40">
-                   {[0, 1, 2, 3].map((num) => (
-                      <div 
-                         key={num}
-                         className={`w-2 h-2 rounded-full transition-all duration-500 ${activeDiscography === num ? 'bg-gold scale-125' : 'bg-gold/20'}`}
-                      />
-                   ))}
-                </div>
-             </div>
           </div>
         </div>
       </section>
@@ -734,7 +777,7 @@ export default function Home() {
       </section>
 
       {/* Press Quotes - Expandable Horizontal Gallery */}
-      <section id="media" className="h-[600px] w-full bg-charcoal overflow-hidden flex flex-col md:flex-row border-y border-gold/10 shadow-2xl">
+      <section id="media" className="h-[850px] md:h-[600px] w-full bg-charcoal overflow-hidden flex flex-col md:flex-row border-y border-gold/10 shadow-2xl">
         {reviews.map((review) => (
           <div
             key={review.id}
@@ -759,33 +802,33 @@ export default function Home() {
               ${activeReview === review.id ? 'opacity-40' : 'opacity-80'}
             `} />
 
-            {/* Vertical Text for Collapsed State */}
+            {/* Column Label (Vertical on Desktop, Horizontal on Mobile) */}
             <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-500
               ${activeReview === review.id ? 'opacity-0 pointer-events-none' : 'opacity-100'}
             `}>
-              <h3 className="font-display text-2xl text-cream uppercase tracking-[0.4em] [writing-mode:vertical-lr] rotate-180 opacity-50">
+              <h3 className="font-display text-lg md:text-2xl text-cream uppercase tracking-[0.4em] md:[writing-mode:vertical-lr] md:rotate-180 opacity-30 md:opacity-50">
                 {review.pub} · {review.year}
               </h3>
             </div>
 
             {/* Content for Expanded State */}
-            <div className={`relative h-full flex flex-col justify-end p-8 md:p-16 transition-[opacity,transform] duration-500 delay-100
+            <div className={`relative h-full flex flex-col justify-end p-6 md:p-12 transition-[opacity,transform] duration-500 delay-100
               ${activeReview === review.id ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}
             `}>
-              <div className="mb-6">
-                <div className="inline-flex items-center gap-2 px-3 py-1 border border-gold/40 rounded-full mb-4">
-                  <span className="w-1.5 h-1.5 rounded-full bg-gold" />
-                  <span className="font-body text-[10px] text-gold uppercase tracking-[0.2em]">{review.category}</span>
+              <div className="mb-3">
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-cream/90 rounded-full mb-3 shadow-sm border border-gold/20">
+                  <span className="w-1.5 h-1.5 rounded-full bg-burgundy animate-pulse" />
+                  <span className="font-body text-[10px] text-burgundy uppercase tracking-[0.3em] font-black">{review.category}</span>
                 </div>
-                <h3 className="font-display text-4xl md:text-6xl text-cream mb-4 leading-tight">{review.title}</h3>
-                <div className="w-16 h-1 bg-gold mb-8" />
+                <h3 className="font-display text-4xl md:text-6xl text-cream mb-1 leading-tight">{review.title}</h3>
+                <div className="w-16 h-1 bg-gold mb-4" />
               </div>
               
-              <p className="font-body text-xl md:text-2xl text-cream/80 max-w-2xl mb-10 leading-relaxed italic">
+              <p className="font-body text-xl md:text-2xl text-cream/80 max-w-2xl mb-6 leading-relaxed italic">
                 "{review.quote}"
               </p>
               
-              <div className="flex items-center gap-12">
+              <div className="flex items-center gap-6">
                 <Link 
                   to="/media" 
                   className="font-body text-xs text-cream uppercase tracking-[0.3em] font-black group flex items-center gap-4"
@@ -917,6 +960,29 @@ export default function Home() {
           100% { transform: translateX(-100%); }
         }
       `}} />
+
+      {/* Video Modal Implementation */}
+      {activeVideoId && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-md transition-all duration-500">
+          <button 
+            onClick={() => setActiveVideoId(null)}
+            className="absolute top-10 right-10 text-white hover:text-gold transition-colors p-4 group"
+          >
+            <span className="font-body tracking-[0.4em] text-xs font-black group-hover:scale-110 block">CLOSE [X]</span>
+          </button>
+          
+          <div className="w-full max-w-5xl aspect-video px-6 relative animate-in fade-in zoom-in duration-500">
+             <iframe 
+               className="w-full h-full rounded-lg shadow-2xl border border-gold/20"
+               src={`https://www.youtube.com/embed/${activeVideoId}?autoplay=1&rel=0`}
+               title="YouTube Video Player"
+               frameBorder="0"
+               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+               allowFullScreen
+             ></iframe>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
